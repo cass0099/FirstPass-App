@@ -29,18 +29,18 @@ jobs:
         pip install "PySide6[webengine]"
         pip install auto-py-to-exe
 
-    # Step 4: Verify working directory and files with detailed logging
+    # Step 4: Verify working directory and list files
     - name: Verify working directory and list files
       run: |
         echo "Current working directory: $(pwd)"
         echo "Listing files in directory:"
         dir /s /b  # Lists all files in the directory recursively (Windows)
 
-    # Step 5: Run auto-py-to-exe with detailed logging
-    - name: Run auto-py-to-exe with verbose logging
+    # Step 5: Run auto-py-to-exe with absolute path
+    - name: Run auto-py-to-exe with absolute path to main.py
       run: |
         echo "Running auto-py-to-exe..."
-        python -m auto_py_to_exe --cli --output-dir dist --onefile --console --name FirstPass --logging-level DEBUG --path-to-main ./main.py
+        python -m auto_py_to_exe --cli --output-dir dist --onefile --console --name FirstPass --logging-level DEBUG --path-to-main $(pwd)/main.py
         echo "auto-py-to-exe finished with status: $?"
 
     # Step 6: Upload Windows artifact
@@ -79,11 +79,11 @@ jobs:
         echo "Listing files in directory:"
         ls -al  # Lists files in the directory (macOS)
 
-    # Step 5: Run auto-py-to-exe with verbose logging
-    - name: Run auto-py-to-exe with verbose logging
+    # Step 5: Run auto-py-to-exe with absolute path
+    - name: Run auto-py-to-exe with absolute path to main.py
       run: |
         echo "Running auto-py-to-exe..."
-        python -m auto_py_to_exe --cli --output-dir dist --onefile --console --name FirstPass --logging-level DEBUG --path-to-main ./main.py
+        python -m auto_py_to_exe --cli --output-dir dist --onefile --console --name FirstPass --logging-level DEBUG --path-to-main $(pwd)/main.py
         echo "auto-py-to-exe finished with status: $?"
 
     # Step 6: Create DMG for macOS
