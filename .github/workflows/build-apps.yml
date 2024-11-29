@@ -2,86 +2,70 @@ name: Build Apps
 
 on:
   push:
-    branches: [main]
+    branches: [ main ]
   pull_request:
-    branches: [main]
+    branches: [ main ]
 
 jobs:
   build-windows:
     runs-on: windows-latest
-
+    
     steps:
-    - uses: actions/checkout@v4
-      with:
-        fetch-depth: 0  # Fetch the full repository history
-
-    - name: List Files in Directory
-      run: |
-        echo "Working Directory:"
-        pwd
-        echo "Files:"
-        dir  # Windows command to list files
-
+    - uses: actions/checkout@v4  # Ensure using the latest version for checking out the repository
+    
     - name: Set up Python
-      uses: actions/setup-python@v4
+      uses: actions/setup-python@v2
       with:
         python-version: '3.12'
-
+    
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
         pip install -r requirements.txt
         pip install "PySide6[webengine]"
         pip install auto-py-to-exe
-
+        
     - name: Build with auto-py-to-exe
       run: |
-        python -m auto_py_to_exe --cli --output-dir dist --onefile --console --name FirstPass ./main.py
-
+        cd /Users/runner/work/firstpass-app/firstpass-app  # Ensure you're in the correct working directory
+        python -m auto_py_to_exe --cli --output-dir dist --onefile --console --name FirstPass main.py  # Reference to the main.py in the root
+    
     - name: Upload Windows artifact
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v2
       with:
         name: FirstPass-Windows
         path: dist/FirstPass.exe
 
   build-macos:
     runs-on: macos-latest
-
+    
     steps:
-    - uses: actions/checkout@v4
-      with:
-        fetch-depth: 0  # Fetch the full repository history
-
-    - name: List Files in Directory
-      run: |
-        echo "Working Directory:"
-        pwd
-        echo "Files:"
-        ls -al  # macOS command to list files
-
+    - uses: actions/checkout@v4  # Ensure using the latest version for checking out the repository
+    
     - name: Set up Python
-      uses: actions/setup-python@v4
+      uses: actions/setup-python@v2
       with:
         python-version: '3.12'
-
+    
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
         pip install -r requirements.txt
         pip install "PySide6[webengine]"
         pip install auto-py-to-exe
-
+        
     - name: Build with auto-py-to-exe
       run: |
-        python -m auto_py_to_exe --cli --output-dir dist --onefile --console --name FirstPass ./main.py
-
+        cd /Users/runner/work/firstpass-app/firstpass-app  # Ensure you're in the correct working directory
+        python -m auto_py_to_exe --cli --output-dir dist --onefile --console --name FirstPass main.py  # Reference to the main.py in the root
+        
     - name: Create DMG
       run: |
         cd dist
         hdiutil create -volname "FirstPass" -srcfolder FirstPass -ov -format UDZO FirstPass.dmg
-
+        
     - name: Upload Mac artifacts
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v2
       with:
         name: FirstPass-macOS
         path: |
