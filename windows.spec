@@ -1,87 +1,68 @@
-name: Build Apps
+# -*- mode: python ; coding: utf-8 -*-
+from pathlib import Path
 
-on:
-  push:
-    branches: [main]
-  pull_request:
-    branches: [main]
+block_cipher = None
 
-jobs:
-  build-windows:
-    runs-on: windows-latest
+a = Analysis(
+    ['main.py'],
+    pathex=[],
+    binaries=[],
+    datas=[],
+    hiddenimports=[
+        # Your local modules
+        'analyzer',
+        'config',
+        'constants',
+        'data_preview',
+        'db_config',
+        'eula_dialog',
+        'generate_knowledge_base',
+        'gui_components',
+        'knowledge_management',
+        'license_expired_view',
+        'license_generator',
+        'license_manager',
+        'license_ui',
+        'llm_handler',
+        'rag_integration',
+        'reset_knowledge_base',
+        'script_runner',
+        'storage',
+        # Qt/GUI related
+        'PySide6',
+        'PySide6.QtCore',
+        'PySide6.QtGui',
+        'PySide6.QtWidgets',
+        'PySide6.QtWebEngineWidgets',
+        'PySide6.QtWebEngineCore',
+        'PySide6.QtWebChannel',
+    ],
+    hookspath=[],
+    hooksconfig={},
+    runtime_hooks=[],
+    excludes=[],
+    win_no_prefer_redirects=False,
+    win_private_assemblies=False,
+    cipher=block_cipher,
+    noarchive=False,
+)
 
-    steps:
-    - name: Checkout repository
-      uses: actions/checkout@v4
+pyz = PYZ(a.pure, a.zipped_data, cipher=block_cipher)
 
-    - name: Set up Python
-      uses: actions/setup-python@v4
-      with:
-        python-version: '3.12'
-
-    - name: Install dependencies
-      run: |
-        python -m pip install --upgrade pip
-        pip install -r requirements.txt
-        pip install "PySide6[webengine]"
-        pip install pyinstaller
-
-    - name: List Files
-      run: |
-        echo "Current directory:"
-        dir
-        echo "Main.py location:"
-        dir main.py
-
-    - name: Build with PyInstaller
-      run: |
-        pyinstaller --onefile --name FirstPass main.py
-
-    - name: Upload Windows artifact
-      uses: actions/upload-artifact@v4
-      with:
-        name: FirstPass-Windows
-        path: dist/FirstPass.exe
-
-  build-macos:
-    runs-on: macos-latest
-
-    steps:
-    - name: Checkout repository
-      uses: actions/checkout@v4
-
-    - name: Set up Python
-      uses: actions/setup-python@v4
-      with:
-        python-version: '3.12'
-
-    - name: Install dependencies
-      run: |
-        python -m pip install --upgrade pip
-        pip install -r requirements.txt
-        pip install "PySide6[webengine]"
-        pip install pyinstaller
-
-    - name: List Files
-      run: |
-        echo "Current directory:"
-        ls -la
-        echo "Main.py location:"
-        ls -la main.py
-
-    - name: Build with PyInstaller
-      run: |
-        pyinstaller --onefile --name FirstPass main.py
-
-    - name: Create DMG
-      run: |
-        cd dist
-        hdiutil create -volname "FirstPass" -srcfolder FirstPass -ov -format UDZO FirstPass.dmg
-
-    - name: Upload Mac artifacts
-      uses: actions/upload-artifact@v4
-      with:
-        name: FirstPass-macOS
-        path: |
-          dist/FirstPass
-          dist/FirstPass.dmg
+exe = EXE(
+    pyz,
+    a.scripts,
+    a.binaries,
+    a.zipfiles,
+    a.datas,
+    [],
+    name='FirstPass',
+    debug=False,
+    bootloader_ignore_signals=False,
+    strip=False,
+    upx=True,
+    upx_exclude=[],
+    runtime_tmpdir=None,
+    console=False,  # Set to False to hide console
+    icon='app_icon.ico' if Path('app_icon.ico').exists() else None
+)
