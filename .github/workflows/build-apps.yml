@@ -12,14 +12,15 @@ jobs:
     
     steps:
     # Step 1: Checkout the repository
-    - uses: actions/checkout@v4
-    
-    # Step 2: Set up Python
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    # Step 2: Set up Python environment
     - name: Set up Python
       uses: actions/setup-python@v4
       with:
         python-version: '3.12'
-    
+
     # Step 3: Install dependencies
     - name: Install dependencies
       run: |
@@ -27,13 +28,19 @@ jobs:
         pip install -r requirements.txt
         pip install "PySide6[webengine]"
         pip install auto-py-to-exe
-        
-    # Step 4: Build the executable with auto-py-to-exe
+
+    # Step 4: Confirm the working directory and files
+    - name: Confirm working directory and list files
+      run: |
+        echo "Current directory: $(pwd)"
+        ls -al
+    
+    # Step 5: Build with auto-py-to-exe
     - name: Build with auto-py-to-exe
       run: |
         python -m auto_py_to_exe --cli --output-dir dist --onefile --console --name FirstPass
-        
-    # Step 5: Upload the Windows artifact
+
+    # Step 6: Upload Windows artifact
     - name: Upload Windows artifact
       uses: actions/upload-artifact@v4
       with:
@@ -45,14 +52,15 @@ jobs:
     
     steps:
     # Step 1: Checkout the repository
-    - uses: actions/checkout@v4
-    
-    # Step 2: Set up Python
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    # Step 2: Set up Python environment
     - name: Set up Python
       uses: actions/setup-python@v4
       with:
         python-version: '3.12'
-    
+
     # Step 3: Install dependencies
     - name: Install dependencies
       run: |
@@ -60,19 +68,25 @@ jobs:
         pip install -r requirements.txt
         pip install "PySide6[webengine]"
         pip install auto-py-to-exe
-        
-    # Step 4: Build the executable with auto-py-to-exe
+
+    # Step 4: Confirm the working directory and list files
+    - name: Confirm working directory and list files
+      run: |
+        echo "Current directory: $(pwd)"
+        ls -al
+    
+    # Step 5: Build with auto-py-to-exe
     - name: Build with auto-py-to-exe
       run: |
         python -m auto_py_to_exe --cli --output-dir dist --onefile --console --name FirstPass
-        
-    # Step 5: Create DMG file for macOS
+
+    # Step 6: Create DMG for macOS
     - name: Create DMG
       run: |
         cd dist
         hdiutil create -volname "FirstPass" -srcfolder FirstPass -ov -format UDZO FirstPass.dmg
-        
-    # Step 6: Upload the macOS artifacts
+
+    # Step 7: Upload Mac artifacts
     - name: Upload Mac artifacts
       uses: actions/upload-artifact@v4
       with:
