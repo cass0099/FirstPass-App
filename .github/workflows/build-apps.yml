@@ -11,10 +11,15 @@ jobs:
     runs-on: windows-latest
     
     steps:
-    - uses: actions/checkout@v4  # Updated to v4
+    - uses: actions/checkout@v4  # Ensure the repository is checked out
+      with:
+        fetch-depth: 0  # Fetch the entire history to avoid any file issues
+    
+    - name: Verify Files in Directory
+      run: ls -al  # Debugging: List all files to ensure main.py is present
     
     - name: Set up Python
-      uses: actions/setup-python@v4  # Updated to v4
+      uses: actions/setup-python@v4
       with:
         python-version: '3.12'
     
@@ -27,10 +32,10 @@ jobs:
         
     - name: Build with auto-py-to-exe
       run: |
-        python -m auto_py_to_exe --cli --output-dir dist --onefile --console --name FirstPass main.py
+        python -m auto_py_to_exe --cli --output-dir dist --onefile --console --name FirstPass ./main.py  # Explicit path to main.py
         
     - name: Upload Windows artifact
-      uses: actions/upload-artifact@v4  # Updated to v4
+      uses: actions/upload-artifact@v4
       with:
         name: FirstPass-Windows
         path: dist/FirstPass.exe
@@ -39,10 +44,15 @@ jobs:
     runs-on: macos-latest
     
     steps:
-    - uses: actions/checkout@v4  # Updated to v4
+    - uses: actions/checkout@v4
+      with:
+        fetch-depth: 0  # Fetch full history
+    
+    - name: Verify Files in Directory
+      run: ls -al  # Debugging: List all files to ensure main.py is present
     
     - name: Set up Python
-      uses: actions/setup-python@v4  # Updated to v4
+      uses: actions/setup-python@v4
       with:
         python-version: '3.12'
     
@@ -55,7 +65,7 @@ jobs:
         
     - name: Build with auto-py-to-exe
       run: |
-        python -m auto_py_to_exe --cli --output-dir dist --onefile --console --name FirstPass main.py
+        python -m auto_py_to_exe --cli --output-dir dist --onefile --console --name FirstPass ./main.py  # Explicit path to main.py
         
     - name: Create DMG
       run: |
@@ -63,7 +73,7 @@ jobs:
         hdiutil create -volname "FirstPass" -srcfolder FirstPass -ov -format UDZO FirstPass.dmg
         
     - name: Upload Mac artifacts
-      uses: actions/upload-artifact@v4  # Updated to v4
+      uses: actions/upload-artifact@v4
       with:
         name: FirstPass-macOS
         path: |
