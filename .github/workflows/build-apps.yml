@@ -26,22 +26,15 @@ jobs:
         pip install "PySide6[webengine]"
         pip install pyinstaller
 
-    - name: List Files
-      run: |
-        echo "Current directory:"
-        dir
-        echo "Main.py location:"
-        dir main.py
-
     - name: Build with PyInstaller
       run: |
-        pyinstaller --onefile --name FirstPass main.py
+        pyinstaller --onefile --collect-all plotly --collect-all pandas --collect-all numpy --collect-all torch --collect-all sentence_transformers --collect-all PySide6 --collect-all transformers main.py
 
     - name: Upload Windows artifact
       uses: actions/upload-artifact@v4
       with:
         name: FirstPass-Windows
-        path: dist/FirstPass.exe
+        path: dist/main.exe
 
   build-macos:
     runs-on: macos-latest
@@ -62,26 +55,19 @@ jobs:
         pip install "PySide6[webengine]"
         pip install pyinstaller
 
-    - name: List Files
-      run: |
-        echo "Current directory:"
-        ls -la
-        echo "Main.py location:"
-        ls -la main.py
-
     - name: Build with PyInstaller
       run: |
-        pyinstaller --onefile --name FirstPass main.py
+        pyinstaller --onefile --collect-all plotly --collect-all pandas --collect-all numpy --collect-all torch --collect-all sentence_transformers --collect-all PySide6 --collect-all transformers main.py
 
     - name: Create DMG
       run: |
         cd dist
-        hdiutil create -volname "FirstPass" -srcfolder FirstPass -ov -format UDZO FirstPass.dmg
+        hdiutil create -volname "FirstPass" -srcfolder main -ov -format UDZO FirstPass.dmg
 
     - name: Upload Mac artifacts
       uses: actions/upload-artifact@v4
       with:
         name: FirstPass-macOS
         path: |
-          dist/FirstPass
+          dist/main
           dist/FirstPass.dmg
