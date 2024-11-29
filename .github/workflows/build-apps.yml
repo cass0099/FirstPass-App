@@ -15,7 +15,7 @@ jobs:
     - uses: actions/checkout@v4  
     
     - name: Set up Python
-      uses: actions/setup-python@v2
+      uses: actions/setup-python@v4
       with:
         python-version: '3.12'
     
@@ -32,7 +32,7 @@ jobs:
         python -m auto_py_to_exe --cli --output-dir dist --onefile --console --name FirstPass main.py  # Reference to the main.py in the root
     
     - name: Upload Windows artifact
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v4
       with:
         name: FirstPass-Windows
         path: dist/FirstPass.exe
@@ -45,7 +45,7 @@ jobs:
     - uses: actions/checkout@v4  
     
     - name: Set up Python
-      uses: actions/setup-python@v2
+      uses: actions/setup-python@v4
       with:
         python-version: '3.12'
     
@@ -67,7 +67,7 @@ jobs:
         hdiutil create -volname "FirstPass" -srcfolder FirstPass -ov -format UDZO FirstPass.dmg
         
     - name: Upload Mac artifacts
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v4
       with:
         name: FirstPass-macOS
         path: |
