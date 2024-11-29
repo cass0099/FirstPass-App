@@ -2,14 +2,14 @@ name: Build Apps
 
 on:
   push:
-    branches: [ main ]
+    branches: [main]
   pull_request:
-    branches: [ main ]
+    branches: [main]
 
 jobs:
   build-windows:
     runs-on: windows-latest
-    
+
     steps:
     # Step 1: Checkout the repository
     - name: Checkout repository
@@ -29,16 +29,19 @@ jobs:
         pip install "PySide6[webengine]"
         pip install auto-py-to-exe
 
-    # Step 4: Confirm the working directory and files
-    - name: Confirm working directory and list files
+    # Step 4: Verify working directory and files with detailed logging
+    - name: Verify working directory and list files
       run: |
-        echo "Current directory: $(pwd)"
-        ls -al
-    
-    # Step 5: Build with auto-py-to-exe
-    - name: Build with auto-py-to-exe
+        echo "Current working directory: $(pwd)"
+        echo "Listing files in directory:"
+        dir /s /b  # Lists all files in the directory recursively (Windows)
+
+    # Step 5: Run auto-py-to-exe with detailed logging
+    - name: Run auto-py-to-exe with verbose logging
       run: |
-        python -m auto_py_to_exe --cli --output-dir dist --onefile --console --name FirstPass
+        echo "Running auto-py-to-exe..."
+        python -m auto_py_to_exe --cli --output-dir dist --onefile --console --name FirstPass --logging-level DEBUG --path-to-main ./main.py
+        echo "auto-py-to-exe finished with status: $?"
 
     # Step 6: Upload Windows artifact
     - name: Upload Windows artifact
@@ -49,7 +52,7 @@ jobs:
 
   build-macos:
     runs-on: macos-latest
-    
+
     steps:
     # Step 1: Checkout the repository
     - name: Checkout repository
@@ -69,16 +72,19 @@ jobs:
         pip install "PySide6[webengine]"
         pip install auto-py-to-exe
 
-    # Step 4: Confirm the working directory and list files
-    - name: Confirm working directory and list files
+    # Step 4: Verify working directory and list files
+    - name: Verify working directory and list files
       run: |
-        echo "Current directory: $(pwd)"
-        ls -al
-    
-    # Step 5: Build with auto-py-to-exe
-    - name: Build with auto-py-to-exe
+        echo "Current working directory: $(pwd)"
+        echo "Listing files in directory:"
+        ls -al  # Lists files in the directory (macOS)
+
+    # Step 5: Run auto-py-to-exe with verbose logging
+    - name: Run auto-py-to-exe with verbose logging
       run: |
-        python -m auto_py_to_exe --cli --output-dir dist --onefile --console --name FirstPass
+        echo "Running auto-py-to-exe..."
+        python -m auto_py_to_exe --cli --output-dir dist --onefile --console --name FirstPass --logging-level DEBUG --path-to-main ./main.py
+        echo "auto-py-to-exe finished with status: $?"
 
     # Step 6: Create DMG for macOS
     - name: Create DMG
