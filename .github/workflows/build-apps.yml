@@ -11,13 +11,16 @@ jobs:
     runs-on: windows-latest
     
     steps:
-    - uses: actions/checkout@v4  # Ensure the repository is checked out
+    - uses: actions/checkout@v4
       with:
-        fetch-depth: 0  # Fetch the entire history to avoid any file issues
-    
+        fetch-depth: 0  # Fetch the full repository
+
     - name: Verify Files in Directory
-      run: ls -al  # Debugging: List all files to ensure main.py is present
-    
+      run: dir  # PowerShell-compatible directory listing for Windows
+
+    - name: Print Working Directory
+      run: pwd  # Debug: Confirm the working directory
+
     - name: Set up Python
       uses: actions/setup-python@v4
       with:
@@ -33,7 +36,7 @@ jobs:
     - name: Build with auto-py-to-exe
       run: |
         python -m auto_py_to_exe --cli --output-dir dist --onefile --console --name FirstPass ./main.py  # Explicit path to main.py
-        
+
     - name: Upload Windows artifact
       uses: actions/upload-artifact@v4
       with:
@@ -42,15 +45,18 @@ jobs:
 
   build-macos:
     runs-on: macos-latest
-    
+
     steps:
     - uses: actions/checkout@v4
       with:
-        fetch-depth: 0  # Fetch full history
-    
+        fetch-depth: 0  # Fetch the full repository
+
     - name: Verify Files in Directory
-      run: ls -al  # Debugging: List all files to ensure main.py is present
-    
+      run: ls -al  # Unix-style directory listing for macOS
+
+    - name: Print Working Directory
+      run: pwd  # Debug: Confirm the working directory
+
     - name: Set up Python
       uses: actions/setup-python@v4
       with:
@@ -66,7 +72,7 @@ jobs:
     - name: Build with auto-py-to-exe
       run: |
         python -m auto_py_to_exe --cli --output-dir dist --onefile --console --name FirstPass ./main.py  # Explicit path to main.py
-        
+
     - name: Create DMG
       run: |
         cd dist
