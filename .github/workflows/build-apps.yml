@@ -11,39 +11,32 @@ jobs:
     runs-on: windows-latest
 
     steps:
-    # Step 1: Checkout the repository
     - name: Checkout repository
       uses: actions/checkout@v4
 
-    # Step 2: Set up Python environment
     - name: Set up Python
       uses: actions/setup-python@v4
       with:
         python-version: '3.12'
 
-    # Step 3: Install dependencies
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
         pip install -r requirements.txt
         pip install "PySide6[webengine]"
-        pip install auto-py-to-exe
+        pip install pyinstaller
 
-    # Step 4: Verify working directory and list files
-    - name: Verify working directory and list files
+    - name: List Files
       run: |
-        echo "Current working directory: $(pwd)"
-        echo "Listing files in directory:"
-        dir /s /b  # Lists all files in the directory recursively (Windows)
+        echo "Current directory:"
+        dir
+        echo "Main.py location:"
+        dir main.py
 
-    # Step 5: Run auto-py-to-exe with absolute path
-    - name: Run auto-py-to-exe with absolute path to main.py
+    - name: Build with PyInstaller
       run: |
-        echo "Running auto-py-to-exe..."
-        python -m auto_py_to_exe --cli --output-dir dist --onefile --console --name FirstPass --logging-level DEBUG --path-to-main $(pwd)/main.py
-        echo "auto-py-to-exe finished with status: $?"
+        pyinstaller --onefile --name FirstPass main.py
 
-    # Step 6: Upload Windows artifact
     - name: Upload Windows artifact
       uses: actions/upload-artifact@v4
       with:
@@ -54,45 +47,37 @@ jobs:
     runs-on: macos-latest
 
     steps:
-    # Step 1: Checkout the repository
     - name: Checkout repository
       uses: actions/checkout@v4
 
-    # Step 2: Set up Python environment
     - name: Set up Python
       uses: actions/setup-python@v4
       with:
         python-version: '3.12'
 
-    # Step 3: Install dependencies
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
         pip install -r requirements.txt
         pip install "PySide6[webengine]"
-        pip install auto-py-to-exe
+        pip install pyinstaller
 
-    # Step 4: Verify working directory and list files
-    - name: Verify working directory and list files
+    - name: List Files
       run: |
-        echo "Current working directory: $(pwd)"
-        echo "Listing files in directory:"
-        ls -al  # Lists files in the directory (macOS)
+        echo "Current directory:"
+        ls -la
+        echo "Main.py location:"
+        ls -la main.py
 
-    # Step 5: Run auto-py-to-exe with absolute path
-    - name: Run auto-py-to-exe with absolute path to main.py
+    - name: Build with PyInstaller
       run: |
-        echo "Running auto-py-to-exe..."
-        python -m auto_py_to_exe --cli --output-dir dist --onefile --console --name FirstPass --logging-level DEBUG --path-to-main $(pwd)/main.py
-        echo "auto-py-to-exe finished with status: $?"
+        pyinstaller --onefile --name FirstPass main.py
 
-    # Step 6: Create DMG for macOS
     - name: Create DMG
       run: |
         cd dist
         hdiutil create -volname "FirstPass" -srcfolder FirstPass -ov -format UDZO FirstPass.dmg
 
-    # Step 7: Upload Mac artifacts
     - name: Upload Mac artifacts
       uses: actions/upload-artifact@v4
       with:
