@@ -36,11 +36,17 @@ a = Analysis(
         'PySide6.QtWebEngineWidgets',
         'PySide6.QtWebEngineCore',
         'PySide6.QtWebChannel',
+        # Matplotlib backends
+        'matplotlib.backends.backend_qt5agg',
+        'matplotlib.backends.backend_qtagg',
+        'matplotlib.backends.backend_agg',
+        'matplotlib.backends.backend_svg',
     ],
     hookspath=[],
     hooksconfig={},
     runtime_hooks=[],
     excludes=[],
+    exclude_datas=[('*.license', None), ('config/*', None), ('storage/*', None)],
     win_no_prefer_redirects=False,
     win_private_assemblies=False,
     cipher=block_cipher,
@@ -63,6 +69,6 @@ exe = EXE(
     upx=True,
     upx_exclude=[],
     runtime_tmpdir=None,
-    console=False,  # Set to False to hide console
+    console=False,
     icon='app_icon.ico' if Path('app_icon.ico').exists() else None
 )
