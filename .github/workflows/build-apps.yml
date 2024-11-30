@@ -28,7 +28,7 @@ jobs:
 
     - name: Build with PyInstaller
       run: |
-        pyinstaller --windowed --name FirstPass --collect-all matplotlib --collect-all matplotlib.backends --collect-all backend_qt5agg --collect-all backend_qtagg --collect-all plotly --collect-all pandas --collect-all numpy --collect-all torch --collect-all sentence_transformers --collect-all PySide6 --collect-all transformers --collect-all seaborn --collect-all scipy --collect-all statsmodels --collect-all category_encoders --collect-all openai --collect-all anthropic --collect-all cryptography --collect-all wordcloud --collect-all yfinance --collect-all geopy --collect-all folium --collect-all networkx --collect-all tabulate --collect-all httpx windows.spec
+        pyinstaller windows.spec
 
     - name: Upload Windows artifact
       uses: actions/upload-artifact@v4
@@ -57,7 +57,7 @@ jobs:
 
     - name: Build with PyInstaller
       run: |
-        pyinstaller --windowed --name FirstPass --collect-all matplotlib --collect-all matplotlib.backends --collect-all backend_qt5agg --collect-all backend_qtagg --collect-all plotly --collect-all pandas --collect-all numpy --collect-all torch --collect-all sentence_transformers --collect-all PySide6 --collect-all transformers --collect-all seaborn --collect-all scipy --collect-all statsmodels --collect-all category_encoders --collect-all openai --collect-all anthropic --collect-all cryptography --collect-all wordcloud --collect-all yfinance --collect-all geopy --collect-all folium --collect-all networkx --collect-all tabulate --collect-all httpx macos.spec
+        pyinstaller macos.spec
 
     - name: Create DMG
       run: |
